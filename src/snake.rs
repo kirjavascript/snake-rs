@@ -44,9 +44,9 @@ impl Snake {
         (self.width * self.height) as usize
     }
 
-    pub fn getpt(&self) -> &Point {
-        &self.head
-    }
+//     pub fn getpt(&self) -> &Point {
+//         &self.head
+//     }
 
     pub fn get_board(&self) -> Vec<bool> {
         let mut board = Vec::with_capacity(self.cell_qty());

@@ -43,15 +43,14 @@ fn main() {
 
 
     // new_from_vec https://github.com/gtk-rs/gdk-pixbuf/issues/13
-
-        window.show_all();
+    window.show_all();
 
     let mut snake = Rc::new(RefCell::new(Snake::new(64, 48)));
 
     let tick = move || {
         snake.borrow_mut().step();
 
-        println!("{:#?}", snake.borrow_mut().getpt());
+        // println!("{:#?}", snake.borrow_mut().get_rgb());
 
         let pixels = Pixbuf::new_from_vec(
             snake.borrow_mut().get_rgb(),
@@ -69,10 +68,10 @@ fn main() {
             Inhibit(false)
         });
 
-        window.show_all();
+        canvas.queue_draw();
 
         gtk::Continue(true)
     };
-    gtk::timeout_add_seconds(1, tick);
+    gtk::timeout_add(50, tick);
     gtk::main();
 }
