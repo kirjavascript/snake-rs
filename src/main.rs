@@ -1,15 +1,22 @@
 // gtk / canvas
 // lerp
 // slowly get faster?
+// score in title
 
 extern crate gtk;
 extern crate gdk;
 extern crate gdk_pixbuf;
 
 use gtk::prelude::*;
-use gtk::{Window, Button, Label, DrawingArea};
+use gtk::{DrawingArea};
 use gdk::ContextExt;
 use gdk_pixbuf::Pixbuf;
+
+use std::cell::RefCell;
+use std::rc::Rc;
+
+mod snake;
+use snake::Snake;
 
 fn main() {
     if gtk::init().is_err() {
@@ -19,7 +26,7 @@ fn main() {
 
     window.set_title("snake-rs");
     window.set_position(gtk::WindowPosition::Center);
-    window.set_default_size(600, 400);
+    window.set_default_size(640, 480);
     window.set_role("__float");
 
     window.connect_delete_event(|_, _| {
@@ -29,22 +36,43 @@ fn main() {
     let canvas = DrawingArea::new();
     window.add(&canvas);
 
-    let pixbuf: Pixbuf = unsafe {
-        Pixbuf::new(0, false, 8, 600, 400).unwrap()
-    };
-    pixbuf.put_pixel(0, 0, 255, 0, 0, 0);
+    // let pixbuf: Pixbuf = unsafe {
+    //     Pixbuf::new(0, false, 8, 640, 480).unwrap()
+    // };
+    // pixbuf.put_pixel(0, 0, 255, 0, 0, 0);
 
-    canvas.connect_draw(move |_, ctx| {
-        ctx.set_source_pixbuf(&pixbuf, 0f64, 0f64);
-        ctx.paint();
-        Inhibit(false)
-    });
 
-    window.show_all();
+    // new_from_vec https://github.com/gtk-rs/gdk-pixbuf/issues/13
+
+        window.show_all();
+
+    let mut snake = Rc::new(RefCell::new(Snake::new(64, 48)));
 
     let tick = move || {
+        snake.borrow_mut().step();
+
+        println!("{:#?}", snake.borrow_mut().getpt());
+
+        let pixels = Pixbuf::new_from_vec(
+            snake.borrow_mut().get_rgb(),
+            0, // colourspace
+            false, // has_alpha
+            8, // bits_per_sample
+            64, // width
+            48, // height
+            64 * 3, // row_stride
+        );
+
+        canvas.connect_draw(move |_, ctx| {
+            ctx.set_source_pixbuf(&pixels, 0f64, 0f64);
+            ctx.paint();
+            Inhibit(false)
+        });
+
+        window.show_all();
+
         gtk::Continue(true)
     };
-    gtk::idle_add(tick);
+    gtk::timeout_add_seconds(1, tick);
     gtk::main();
 }
