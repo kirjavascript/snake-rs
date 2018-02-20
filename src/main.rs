@@ -40,12 +40,11 @@ fn main() {
 
     let mut snake = Rc::new(RefCell::new(Snake::new(64, 48)));
 
-    // step loop
-    let tick = move || {
-        snake.borrow_mut().step();
+    let snake_draw_clone = snake.clone();
 
+    canvas.connect_draw(move |_, ctx| {
         let pixels = Pixbuf::new_from_vec(
-            snake.borrow_mut().get_rgb(),
+            snake_draw_clone.borrow_mut().get_rgb(),
             0, // colourspace
             false, // has_alpha
             8, // bits_per_sample
@@ -53,37 +52,33 @@ fn main() {
             48, // height
             64 * 3, // row_stride
         );
+        let pixels_scaled = pixbuf_scale(pixels, 64, 48, 10);
+        ctx.set_source_pixbuf(&pixels_scaled, 0f64, 0f64);
+        ctx.paint();
+        Inhibit(false)
+    });
 
-        canvas.connect_draw(move |_, ctx| {
-            let scale = 10;
-            let pixbuf_scale: Pixbuf = unsafe {
-                Pixbuf::new(0, false, 8, 64*scale, 48*scale).unwrap()
-            };
-
-        // let pixbuf_scale = Pixbuf::new_from_vec(vec![0; 640 * 480], 0, false, 8, 640, 480, 64 * 3, );
-            pixels.scale(
-                &pixbuf_scale,
-                0,
-                0,
-                64*scale,
-                48*scale,
-                0.,
-                0.,
-                scale as f64,
-                scale as f64,
-                1,
-            );
-            ctx.set_source_pixbuf(&pixbuf_scale, 0f64, 0f64);
-            ctx.paint();
-            Inhibit(false)
-        });
-
+    // step loop
+    let tick = move || {
+        snake.borrow_mut().step();
         canvas.queue_draw();
-
-        println!("tick");
-
         gtk::Continue(true)
     };
     gtk::timeout_add(50, tick);
     gtk::main();
+}
+
+fn pixbuf_scale(buf: Pixbuf, width: i32, height: i32, scale: i32) -> Pixbuf {
+    let scaled_width = width * scale;
+    let scaled_height = height * scale;
+    let pixbuf_scale = Pixbuf::new_from_vec(
+        vec![0; (scaled_width * scaled_height * 3) as usize],
+        0, false, 8,
+        scaled_width, scaled_height, scaled_width * 3
+    );
+    buf.scale(&pixbuf_scale,
+        0, 0, scaled_width, scaled_height,
+        0., 0., scale as f64, scale as f64, 1,
+    );
+    pixbuf_scale
 }

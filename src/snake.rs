@@ -18,6 +18,15 @@ pub enum Direction {
     Up, Down, Left, Right,
 }
 
+impl Point {
+    fn clone(&self) -> Self {
+        Point {
+            x: self.x,
+            y: self.y,
+        }
+    }
+}
+
 impl Snake {
     pub fn new(width: u32, height: u32) -> Self {
         Snake {
