@@ -1,6 +1,5 @@
 // gtk / canvas
 // lerp
-// slowly get faster?
 // score in title
 
 extern crate gtk;
@@ -22,6 +21,8 @@ fn main() {
     if gtk::init().is_err() {
         panic!("Failed to initialize GTK.");
     }
+
+    // init stuff
     let window = gtk::Window::new(gtk::WindowType::Toplevel);
 
     window.set_title("snake-rs");
@@ -33,15 +34,17 @@ fn main() {
         gtk::main_quit();
         Inhibit(false)
     });
+
     let canvas = DrawingArea::new();
     window.add(&canvas);
-
     window.show_all();
+
+    // load snake
 
     let mut snake = Rc::new(RefCell::new(Snake::new(64, 48)));
 
+    // drawing callback
     let snake_draw_clone = snake.clone();
-
     canvas.connect_draw(move |_, ctx| {
         let pixels = Pixbuf::new_from_vec(
             snake_draw_clone.borrow_mut().get_rgb(),
@@ -50,7 +53,7 @@ fn main() {
             8, // bits_per_sample
             64, // width
             48, // height
-            64 * 3, // row_stride
+            64 * 3, // row_stride (Distance in bytes between row starts)
         );
         let pixels_scaled = pixbuf_scale(pixels, 64, 48, 10);
         ctx.set_source_pixbuf(&pixels_scaled, 0f64, 0f64);
@@ -64,7 +67,8 @@ fn main() {
         canvas.queue_draw();
         gtk::Continue(true)
     };
-    gtk::timeout_add(50, tick);
+    gtk::timeout_add(100, tick);
+    // gtk::idle_add
     gtk::main();
 }
 
