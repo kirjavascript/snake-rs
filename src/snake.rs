@@ -34,6 +34,9 @@ impl Snake {
         if self.head.x >= self.width {
             self.head.x = 0;
         }
+
+        // check collision with tail
+        // check collision with fruit
     }
 
     pub fn change_direction(&mut self, direction: Direction) {
@@ -43,10 +46,6 @@ impl Snake {
     fn cell_qty(&self) -> usize {
         (self.width * self.height) as usize
     }
-
-//     pub fn getpt(&self) -> &Point {
-//         &self.head
-//     }
 
     pub fn get_board(&self) -> Vec<bool> {
         let mut board = Vec::with_capacity(self.cell_qty());

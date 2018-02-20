@@ -36,21 +36,13 @@ fn main() {
     let canvas = DrawingArea::new();
     window.add(&canvas);
 
-    // let pixbuf: Pixbuf = unsafe {
-    //     Pixbuf::new(0, false, 8, 640, 480).unwrap()
-    // };
-    // pixbuf.put_pixel(0, 0, 255, 0, 0, 0);
-
-
-    // new_from_vec https://github.com/gtk-rs/gdk-pixbuf/issues/13
     window.show_all();
 
     let mut snake = Rc::new(RefCell::new(Snake::new(64, 48)));
 
+    // step loop
     let tick = move || {
         snake.borrow_mut().step();
-
-        // println!("{:#?}", snake.borrow_mut().get_rgb());
 
         let pixels = Pixbuf::new_from_vec(
             snake.borrow_mut().get_rgb(),
@@ -63,12 +55,32 @@ fn main() {
         );
 
         canvas.connect_draw(move |_, ctx| {
-            ctx.set_source_pixbuf(&pixels, 0f64, 0f64);
+            let scale = 10;
+            let pixbuf_scale: Pixbuf = unsafe {
+                Pixbuf::new(0, false, 8, 64*scale, 48*scale).unwrap()
+            };
+
+        // let pixbuf_scale = Pixbuf::new_from_vec(vec![0; 640 * 480], 0, false, 8, 640, 480, 64 * 3, );
+            pixels.scale(
+                &pixbuf_scale,
+                0,
+                0,
+                64*scale,
+                48*scale,
+                0.,
+                0.,
+                scale as f64,
+                scale as f64,
+                1,
+            );
+            ctx.set_source_pixbuf(&pixbuf_scale, 0f64, 0f64);
             ctx.paint();
             Inhibit(false)
         });
 
         canvas.queue_draw();
+
+        println!("tick");
 
         gtk::Continue(true)
     };
