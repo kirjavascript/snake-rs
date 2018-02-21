@@ -40,7 +40,6 @@ fn main() {
     window.show_all();
 
     // load snake
-
     let mut snake = Rc::new(RefCell::new(Snake::new(64, 48)));
 
     // drawing callback

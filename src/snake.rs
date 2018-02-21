@@ -2,7 +2,7 @@
 pub struct Snake {
     facing: Direction,
     head: Point,
-    // tail: Vec<Point>,
+    tail: Vec<Point>,
     // fruit: Point,
     width: u32,
     height: u32,
@@ -33,10 +33,14 @@ impl Snake {
         Snake {
             facing: Direction::Right,
             head: Point { x: 0, y: 0 },
+            tail: Vec::new(),
             width,
             height,
         }
     }
+
+    // stop
+    // restart
 
     pub fn step(&mut self) {
         // clone head to tail
@@ -98,15 +102,16 @@ impl Snake {
         let mut rgb = Vec::with_capacity(self.cell_qty() * 3);
 
         for cell in self.get_board() {
+            // TODO: lerp differently each pixel
             if cell {
                 rgb.push(0);
                 rgb.push(255);
                 rgb.push(0);
             }
             else {
-                rgb.push(0);
-                rgb.push(0);
-                rgb.push(0);
+                rgb.push(0x60);
+                rgb.push(0x60);
+                rgb.push(0x60);
             }
         }
 
