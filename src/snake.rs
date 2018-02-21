@@ -187,18 +187,20 @@ impl Snake {
     }
 
     fn get_color(&mut self) -> (u8, u8, u8) {
-        // TODO: more colours to lerp? slower lerp?
-        self.color_seed = self.color_seed.wrapping_add(1);
-        let group = ((self.color_seed / 255) % 3) as usize;
-        let i = (self.color_seed % 255) as u8;
-        let groups: [(u8, u8, u8); 3] = [
-            (0, 255, 0),
-            (0, 0, 255),
-            (255, 0, 255),
+        self.color_seed = self.color_seed.wrapping_add(4);
+        let seed = self.color_seed;
+        let group = ((seed / 255) % 5) as usize;
+        let i = (seed % 255) as u8;
+        let groups: [(u8, u8, u8); 5] = [
+            (0,255,4),
+            (0,81,255),
+            (75,0,130),
+            (255,141,0),
+            (227,255,0),
         ];
 
         let start = groups[group];
-        let end = groups[(group + 1) % 3];
+        let end = groups[(group + 1) % 5];
 
         let r = lerp(start.0, end.0, i);
         let g = lerp(start.1, end.1, i);
@@ -208,37 +210,37 @@ impl Snake {
     }
 
     pub fn get_rgb(&mut self) -> Vec<u8> {
-        let mut rgb = Vec::with_capacity(self.cell_qty() * 3);
+        let mut rgb_board = Vec::with_capacity(self.cell_qty() * 3);
         let (r, g, b) = self.get_color();
 
         for cell in self.get_board() {
             match cell {
                 Item::Fruit => {
-                    rgb.push(255);
-                    rgb.push(60);
-                    rgb.push(60);
+                    rgb_board.push(255);
+                    rgb_board.push(60);
+                    rgb_board.push(60);
                 },
                 Item::Nothing => {
-                    rgb.push(0x60);
-                    rgb.push(0x60);
-                    rgb.push(0x60);
+                    rgb_board.push(0x60);
+                    rgb_board.push(0x60);
+                    rgb_board.push(0x60);
                 },
                 Item::Snake => {
                     if self.running {
-                        rgb.push(r);
-                        rgb.push(g);
-                        rgb.push(b);
+                        rgb_board.push(r);
+                        rgb_board.push(g);
+                        rgb_board.push(b);
                     }
                     else {
-                        rgb.push(0);
-                        rgb.push(0);
-                        rgb.push(0);
+                        rgb_board.push(0);
+                        rgb_board.push(0);
+                        rgb_board.push(0);
                     }
                 },
             }
         }
 
-        rgb
+        rgb_board
     }
 }
 
