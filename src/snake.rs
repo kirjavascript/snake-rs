@@ -8,8 +8,9 @@ pub struct Snake {
     width: u32,
     height: u32,
     score: u64,
-    //color_seed
     running: bool,
+    increase_amount: u8,
+    //color_seed
 }
 
 #[derive(PartialEq)]
@@ -57,6 +58,7 @@ impl Snake {
             width,
             height,
             score: 0,
+            increase_amount: 0,
             running: true,
         }
     }
@@ -102,12 +104,19 @@ impl Snake {
             else if self.head == self.fruit {
                 self.score += 10;
                 self.fruit = loop {
-                    // ensure the new fruit isn't in the tail
+                    // create new fruit
                     let fruit = Point::random(self.width, self.height);
-                    if !self.tail.contains(&fruit) {
+                    // ensure the new fruit isn't in the head or tail
+                    let head_col = self.head == fruit;
+                    if !self.tail.contains(&fruit) && !head_col {
                         break fruit;
                     }
                 };
+                // add tail extension amount
+                self.increase_amount = 3;
+            }
+            else if self.increase_amount != 0 {
+                self.increase_amount -= 1;
             }
             else {
                 // unshift tail
