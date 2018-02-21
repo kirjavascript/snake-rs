@@ -1,5 +1,5 @@
-
 use rand;
+use std;
 
 pub struct Snake {
     facing: Direction,
@@ -10,6 +10,7 @@ pub struct Snake {
     height: u32,
     score: u64,
     //color_seed
+    running: bool,
 }
 
 #[derive(PartialEq)]
@@ -42,58 +43,67 @@ impl Snake {
         Snake {
             facing: Direction::Right,
             head: Point { x: 0, y: 0 },
-            tail: vec![Point { x: -1, y: 0 }],
+            tail: Vec::new(),
             fruit: Point::random(width, height),
             width,
             height,
             score: 0,
+            running: true,
         }
     }
 
-    // stop
-    // restart
+    pub fn restart(&mut self) {
+        unsafe {
+            std::ptr::write(self, Self::new(self.width, self.height));
+        }
+    }
 
     pub fn step(&mut self) {
-        // clone head to tail
-        self.tail.push(self.head.clone());
+        if self.running {
+            // clone head to tail
+            self.tail.push(self.head.clone());
 
-        // move head
-        match self.facing {
-            Direction::Right => { self.head.x += 1 },
-            Direction::Down => { self.head.y += 1 },
-            Direction::Up => { self.head.y -= 1 },
-            Direction::Left => { self.head.x -= 1 },
-        };
-
-        // wrap
-        if self.head.x >= self.width as i32 {
-            self.head.x = 0;
-        }
-        else if self.head.x < 0 {
-            self.head.x = self.width as i32 -1;
-        }
-        else if self.head.y >= self.height as i32 {
-            self.head.y = 0;
-        }
-        else if self.head.y < 0 {
-            self.head.y = self.height as i32 -1;
-        }
-
-        // check collision with tail
-        // check collision with fruit
-        if self.head == self.fruit {
-            self.score += 100;
-            self.fruit = loop {
-                // ensure the new fruit isn't in the tail
-                let fruit = Point::random(self.width, self.height);
-                if !self.tail.contains(&fruit) {
-                    break fruit;
-                }
+            // move head
+            match self.facing {
+                Direction::Right => { self.head.x += 1 },
+                Direction::Down => { self.head.y += 1 },
+                Direction::Up => { self.head.y -= 1 },
+                Direction::Left => { self.head.x -= 1 },
             };
-        }
-        else {
-            // unshift tail
-            let _ = self.tail.splice(..1, vec![]);
+
+            // wrap
+            if self.head.x >= self.width as i32 {
+                self.head.x = 0;
+            }
+            else if self.head.x < 0 {
+                self.head.x = self.width as i32 -1;
+            }
+            else if self.head.y >= self.height as i32 {
+                self.head.y = 0;
+            }
+            else if self.head.y < 0 {
+                self.head.y = self.height as i32 -1;
+            }
+
+            // check collision with tail
+            if self.tail.contains(&self.head) {
+                self.running = false;
+            }
+            // check collision with fruit
+            else if self.head == self.fruit {
+                self.score += 10;
+                self.fruit = loop {
+                    // ensure the new fruit isn't in the tail
+                    let fruit = Point::random(self.width, self.height);
+                    if !self.tail.contains(&fruit) {
+                        break fruit;
+                    }
+                };
+            }
+            else {
+                // unshift tail
+                let _ = self.tail.splice(..1, vec![]);
+            }
         }
     }
 
@@ -107,6 +117,10 @@ impl Snake {
 
     pub fn get_score(&self) -> u64 {
         self.score
+    }
+
+    pub fn is_running(&self) -> bool {
+        self.running
     }
 
     pub fn get_board(&self) -> Vec<bool> {
@@ -137,9 +151,14 @@ impl Snake {
 
         for cell in self.get_board() {
             // TODO: lerp differently each pixel
-            if cell {
+            if cell && self.running {
                 rgb.push(0);
-                rgb.push(255);
+                rgb.push(200);
+                rgb.push(0);
+            }
+            else if cell && !self.running {
+                rgb.push(0);
+                rgb.push(0);
                 rgb.push(0);
             }
             else {

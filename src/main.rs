@@ -18,6 +18,8 @@ use std::rc::Rc;
 mod snake;
 use snake::Snake;
 
+static TITLE: &str = "snake-rs";
+
 fn main() {
     if gtk::init().is_err() {
         panic!("Failed to initialize GTK.");
@@ -26,7 +28,7 @@ fn main() {
     // init stuff
     let window = gtk::Window::new(gtk::WindowType::Toplevel);
 
-    window.set_title("snake-rs");
+    window.set_title(TITLE);
     window.set_position(gtk::WindowPosition::Center);
     window.set_default_size(640, 480);
     window.set_role("__float");
@@ -64,26 +66,42 @@ fn main() {
     // input
     let snake_input_clone = snake.clone();
     window.connect_key_press_event(move |_, e| {
-        let change = match e.get_keyval() {
-            65362 => Some(snake::Direction::Up),
-            65364 => Some(snake::Direction::Down),
-            65361 => Some(snake::Direction::Left),
-            65363 => Some(snake::Direction::Right),
-            _ => None,
-        };
-        if change.is_some() {
-            snake_input_clone.borrow_mut().change_direction(change.unwrap());
+        if snake_input_clone.borrow().is_running() {
+            let change = match e.get_keyval() {
+                65362 => Some(snake::Direction::Up),
+                65364 => Some(snake::Direction::Down),
+                65361 => Some(snake::Direction::Left),
+                65363 => Some(snake::Direction::Right),
+                _ => None,
+            };
+            if change.is_some() {
+                snake_input_clone.borrow_mut().change_direction(change.unwrap());
+            }
+        }
+        else {
+            snake_input_clone.borrow_mut().restart();
+            window.set_title(TITLE);
         }
         Inhibit(false)
     });
 
     // step loop
     let tick = move || {
+        // step & draw
         snake.borrow_mut().step();
         canvas.queue_draw();
+
+        // set score
+        let score = snake.borrow().get_score();
+        if score != 0 {
+            let new_title = format!("{} - score: {}", TITLE, score);
+            window.set_title(&new_title);
+        }
+
         gtk::Continue(true)
     };
     gtk::timeout_add(35, tick);
+
     // gtk::idle_add
     gtk::main();
 }
