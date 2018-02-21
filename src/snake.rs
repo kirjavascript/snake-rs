@@ -10,7 +10,7 @@ pub struct Snake {
     score: u64,
     running: bool,
     increase_amount: u8,
-    //color_seed
+    color_seed: u16,
 }
 
 #[derive(PartialEq)]
@@ -65,6 +65,7 @@ impl Snake {
             score: 0,
             increase_amount: 0,
             running: true,
+            color_seed: 0,
         }
     }
 
@@ -178,15 +179,35 @@ impl Snake {
         board
     }
 
+    pub fn get_color(&mut self) -> (u8, u8, u8) {
+        self.color_seed = self.color_seed.wrapping_add(1);
+        let group = ((self.color_seed / 255) % 3) as usize;
+        let i = (self.color_seed & 255) as u8;
+        let groups: [(u8, u8, u8); 3] = [
+            (0, 255, 0),
+            (0, 0, 255),
+            (0, 255, 0),
+        ];
+
+        let start = groups[group];
+        let end = groups[(group + 1) % 3];
+
+        let r = lerp(start.0, end.0, i);
+        let g = lerp(start.1, end.1, i);
+        let b = lerp(start.2, end.2, i);
+
+        (r, g, b)
+    }
+
     pub fn get_rgb(&mut self) -> Vec<u8> {
         let mut rgb = Vec::with_capacity(self.cell_qty() * 3);
 
         for cell in self.get_board() {
-            // TODO: lerp differently each pixel
             if cell && self.running {
-                rgb.push(0);
-                rgb.push(200);
-                rgb.push(0);
+                let (r, g, b) = self.get_color();
+                rgb.push(r);
+                rgb.push(g);
+                rgb.push(b);
             }
             else if cell && !self.running {
                 rgb.push(0);
@@ -202,4 +223,8 @@ impl Snake {
 
         rgb
     }
+}
+
+pub fn lerp(start: u8, end: u8, i: u8) -> u8 {
+    (start as f32 + ((end as i64 - start as i64) as f32 * (i as f32 / 255.0))) as u8
 }
