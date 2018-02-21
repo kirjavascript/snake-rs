@@ -40,6 +40,11 @@ impl Point {
             y: self.y,
         }
     }
+
+    fn collides(&self, point: &Point) -> bool {
+        self.x == point.x && self.y == point.y
+    }
+
     fn random(width: u32, height: u32) -> Self {
         Point {
             x: (rand::random::<u32>() % width) as i32,
@@ -107,7 +112,7 @@ impl Snake {
                     // create new fruit
                     let fruit = Point::random(self.width, self.height);
                     // ensure the new fruit isn't in the head or tail
-                    let head_col = self.head == fruit;
+                    let head_col = self.head.collides(&fruit);
                     if !self.tail.contains(&fruit) && !head_col {
                         break fruit;
                     }
@@ -120,7 +125,7 @@ impl Snake {
             }
             else {
                 // unshift tail
-                let _ = self.tail.splice(..1, vec![]);
+                let _end = self.tail.splice(..1, vec![]);
             }
         }
     }
@@ -155,8 +160,9 @@ impl Snake {
         for y in 0..self.height as i32 {
             for x in 0..self.width as i32 {
                 // TODO: improve O(n^2)
-                let head_col = self.head.x == x && self.head.y == y;
-                let fruit_col = self.fruit.x == x && self.fruit.y == y;
+                let point = Point{ x, y };
+                let head_col = self.head.collides(&point);
+                let fruit_col = self.fruit.collides(&point);
                 let tail_col = self.tail.contains(&Point { x, y });
                 let value = if head_col || fruit_col || tail_col {
                     true
@@ -172,7 +178,7 @@ impl Snake {
         board
     }
 
-    pub fn get_rgb(&self) -> Vec<u8> {
+    pub fn get_rgb(&mut self) -> Vec<u8> {
         let mut rgb = Vec::with_capacity(self.cell_qty() * 3);
 
         for cell in self.get_board() {

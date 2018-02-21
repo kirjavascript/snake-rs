@@ -86,17 +86,18 @@ fn main() {
 
     // step loop
     let tick = move || {
-        // step & draw
-        snake.borrow_mut().step();
-        canvas.queue_draw();
-
         // set score
         let mut new_title = format!("{} - score: {}", TITLE, snake.borrow().get_score());
         if !snake.borrow().is_running() {
             new_title.push_str(" - press SPACE to restart");
         }
-        window.set_title(&new_title);
+        else {
+            // step & draw
+            snake.borrow_mut().step();
+            canvas.queue_draw();
+        }
 
+        window.set_title(&new_title);
         gtk::Continue(true)
     };
     gtk::timeout_add(45, tick);
