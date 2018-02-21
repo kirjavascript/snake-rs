@@ -78,9 +78,8 @@ fn main() {
                 snake_input_clone.borrow_mut().change_direction(change.unwrap());
             }
         }
-        else {
+        else if e.get_keyval() == 32 {
             snake_input_clone.borrow_mut().restart();
-            window.set_title(TITLE);
         }
         Inhibit(false)
     });
@@ -92,15 +91,15 @@ fn main() {
         canvas.queue_draw();
 
         // set score
-        let score = snake.borrow().get_score();
-        if score != 0 {
-            let new_title = format!("{} - score: {}", TITLE, score);
-            window.set_title(&new_title);
+        let mut new_title = format!("{} - score: {}", TITLE, snake.borrow().get_score());
+        if !snake.borrow().is_running() {
+            new_title.push_str(" - press SPACE to restart");
         }
+        window.set_title(&new_title);
 
         gtk::Continue(true)
     };
-    gtk::timeout_add(35, tick);
+    gtk::timeout_add(45, tick);
 
     // gtk::idle_add
     gtk::main();

@@ -1,5 +1,4 @@
 use rand;
-use std;
 
 pub struct Snake {
     facing: Direction,
@@ -19,8 +18,18 @@ pub struct Point {
     y: i32,
 }
 
+#[derive(PartialEq)]
 pub enum Direction {
     Up, Down, Left, Right,
+}
+
+impl Direction {
+    fn is_horiz(direction: &Direction) -> bool {
+        direction == &Direction::Right || direction == &Direction::Left
+    }
+    fn is_vert(direction: &Direction) -> bool {
+        direction == &Direction::Up || direction == &Direction::Down
+    }
 }
 
 impl Point {
@@ -53,9 +62,9 @@ impl Snake {
     }
 
     pub fn restart(&mut self) {
-        unsafe {
-            std::ptr::write(self, Self::new(self.width, self.height));
-        }
+        self.score = 0;
+        self.running = true;
+        self.tail = Vec::new();
     }
 
     pub fn step(&mut self) {
@@ -112,7 +121,15 @@ impl Snake {
     }
 
     pub fn change_direction(&mut self, direction: Direction) {
-        self.facing = direction;
+        // check vertical axis
+        let horiz = Direction::is_horiz(&direction)
+            && Direction::is_horiz(&self.facing);
+        let vert = Direction::is_vert(&direction)
+            && Direction::is_vert(&self.facing);
+
+        if self.score == 0 || !horiz && !vert {
+            self.facing = direction;
+        }
     }
 
     pub fn get_score(&self) -> u64 {
