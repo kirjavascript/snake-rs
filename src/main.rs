@@ -5,6 +5,7 @@
 extern crate gtk;
 extern crate gdk;
 extern crate gdk_pixbuf;
+extern crate rand;
 
 use gtk::prelude::*;
 use gtk::{DrawingArea};
@@ -40,7 +41,7 @@ fn main() {
     window.show_all();
 
     // load snake
-    let mut snake = Rc::new(RefCell::new(Snake::new(64, 48)));
+    let snake = Rc::new(RefCell::new(Snake::new(64, 48)));
 
     // drawing callback
     let snake_draw_clone = snake.clone();

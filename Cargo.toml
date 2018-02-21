@@ -7,6 +7,4 @@ authors = ["kirjavascript <snkenjoi@gmail.com>"]
 gtk = "^0"
 gdk = "^0"
 gdk-pixbuf = "^0"
-
-[features]
-default = ["gtk/v3_10"] # in case your version is 3.10
+rand = "0.4.2"
