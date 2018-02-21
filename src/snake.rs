@@ -19,6 +19,10 @@ pub struct Point {
     y: i32,
 }
 
+enum Item {
+    Snake, Fruit, Nothing,
+}
+
 #[derive(PartialEq)]
 pub enum Direction {
     Up, Down, Left, Right,
@@ -155,7 +159,7 @@ impl Snake {
         self.running
     }
 
-    pub fn get_board(&self) -> Vec<bool> {
+    fn get_board(&self) -> Vec<Item> {
         let mut board = Vec::with_capacity(self.cell_qty());
 
         for y in 0..self.height as i32 {
@@ -165,11 +169,14 @@ impl Snake {
                 let head_col = self.head.collides(&point);
                 let fruit_col = self.fruit.collides(&point);
                 let tail_col = self.tail.contains(&Point { x, y });
-                let value = if head_col || fruit_col || tail_col {
-                    true
+                let value = if head_col || tail_col {
+                    Item::Snake
+                }
+                else if fruit_col {
+                    Item::Fruit
                 }
                 else {
-                    false
+                    Item::Nothing
                 };
 
                 board.push(value);
@@ -179,7 +186,8 @@ impl Snake {
         board
     }
 
-    pub fn get_color(&mut self) -> (u8, u8, u8) {
+    fn get_color(&mut self) -> (u8, u8, u8) {
+        // TODO: more colours to lerp? slower lerp?
         self.color_seed = self.color_seed.wrapping_add(1);
         let group = ((self.color_seed / 255) % 3) as usize;
         let i = (self.color_seed % 255) as u8;
@@ -200,25 +208,33 @@ impl Snake {
     }
 
     pub fn get_rgb(&mut self) -> Vec<u8> {
-        // TODO: make fruit red
         let mut rgb = Vec::with_capacity(self.cell_qty() * 3);
+        let (r, g, b) = self.get_color();
 
         for cell in self.get_board() {
-            if cell && self.running {
-                let (r, g, b) = self.get_color();
-                rgb.push(r);
-                rgb.push(g);
-                rgb.push(b);
-            }
-            else if cell && !self.running {
-                rgb.push(0);
-                rgb.push(0);
-                rgb.push(0);
-            }
-            else {
-                rgb.push(0x60);
-                rgb.push(0x60);
-                rgb.push(0x60);
+            match cell {
+                Item::Fruit => {
+                    rgb.push(255);
+                    rgb.push(60);
+                    rgb.push(60);
+                },
+                Item::Nothing => {
+                    rgb.push(0x60);
+                    rgb.push(0x60);
+                    rgb.push(0x60);
+                },
+                Item::Snake => {
+                    if self.running {
+                        rgb.push(r);
+                        rgb.push(g);
+                        rgb.push(b);
+                    }
+                    else {
+                        rgb.push(0);
+                        rgb.push(0);
+                        rgb.push(0);
+                    }
+                },
             }
         }
 
