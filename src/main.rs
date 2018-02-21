@@ -61,13 +61,29 @@ fn main() {
         Inhibit(false)
     });
 
+    // input
+    let snake_input_clone = snake.clone();
+    window.connect_key_press_event(move |_, e| {
+        let change = match e.get_keyval() {
+            65362 => Some(snake::Direction::Up),
+            65364 => Some(snake::Direction::Down),
+            65361 => Some(snake::Direction::Left),
+            65363 => Some(snake::Direction::Right),
+            _ => None,
+        };
+        if change.is_some() {
+            snake_input_clone.borrow_mut().change_direction(change.unwrap());
+        }
+        Inhibit(false)
+    });
+
     // step loop
     let tick = move || {
         snake.borrow_mut().step();
         canvas.queue_draw();
         gtk::Continue(true)
     };
-    gtk::timeout_add(100, tick);
+    gtk::timeout_add(35, tick);
     // gtk::idle_add
     gtk::main();
 }
