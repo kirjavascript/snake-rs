@@ -182,11 +182,11 @@ impl Snake {
     pub fn get_color(&mut self) -> (u8, u8, u8) {
         self.color_seed = self.color_seed.wrapping_add(1);
         let group = ((self.color_seed / 255) % 3) as usize;
-        let i = (self.color_seed & 255) as u8;
+        let i = (self.color_seed % 255) as u8;
         let groups: [(u8, u8, u8); 3] = [
             (0, 255, 0),
             (0, 0, 255),
-            (0, 255, 0),
+            (255, 0, 255),
         ];
 
         let start = groups[group];
@@ -200,6 +200,7 @@ impl Snake {
     }
 
     pub fn get_rgb(&mut self) -> Vec<u8> {
+        // TODO: make fruit red
         let mut rgb = Vec::with_capacity(self.cell_qty() * 3);
 
         for cell in self.get_board() {
