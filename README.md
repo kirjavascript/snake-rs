@@ -1,5 +1,7 @@
+# snake-rs
+
 <div align="center">
-    <img src="media/snake-gtk.gif" alt="snake-gtk">
+    <img src="static/snake-gtk.gif" alt="snake-gtk">
 </div>
 
 run in gtk
@@ -10,4 +12,6 @@ cargo run --bin gtk --features=gtk-deps
 
 run in web
 
+```shell
 cargo +nightly web start --target-webasm --bin web --features web-deps
+```

@@ -50,9 +50,11 @@ impl Point {
     }
 
     fn random(width: u32, height: u32) -> Self {
+        let rnd1: u32 = rand::random();
+        let rnd2: u32 = rand::random();
         Point {
-            x: (rand::random::<u32>() % width) as i32,
-            y: (rand::random::<u32>() % height) as i32,
+            x: (rnd1 % width) as i32,
+            y: (rnd2 % height) as i32,
         }
     }
 }
