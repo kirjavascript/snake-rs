@@ -49,13 +49,13 @@ fn main() {
     let snake_draw_clone = snake.clone();
     canvas.connect_draw(move |_, ctx| {
         let pixels = Pixbuf::new_from_vec(
-            snake_draw_clone.borrow_mut().get_rgb(),
+            snake_draw_clone.borrow_mut().get_rgba(),
             0, // colourspace
-            false, // has_alpha
+            true, // has_alpha
             8, // bits_per_sample
             64, // width
             48, // height
-            64 * 3, // row_stride (Distance in bytes between row starts)
+            64 * 4, // row_stride (Distance in bytes between row starts)
         );
         let pixels_scaled = pixbuf_scale(pixels, 64, 48, 10);
         ctx.set_source_pixbuf(&pixels_scaled, 0f64, 0f64);
@@ -110,9 +110,9 @@ fn pixbuf_scale(buf: Pixbuf, width: i32, height: i32, scale: i32) -> Pixbuf {
     let scaled_width = width * scale;
     let scaled_height = height * scale;
     let pixbuf_scale = Pixbuf::new_from_vec(
-        vec![0; (scaled_width * scaled_height * 3) as usize],
-        0, false, 8,
-        scaled_width, scaled_height, scaled_width * 3
+        vec![0; (scaled_width * scaled_height * 4) as usize],
+        0, true, 8,
+        scaled_width, scaled_height, scaled_width * 4
     );
     buf.scale(&pixbuf_scale,
         0, 0, scaled_width, scaled_height,

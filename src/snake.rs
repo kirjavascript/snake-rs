@@ -211,7 +211,7 @@ impl Snake {
         (r, g, b)
     }
 
-    pub fn get_rgb(&mut self) -> Vec<u8> {
+    pub fn get_rgba(&mut self) -> Vec<u8> {
         let mut rgb_board = Vec::with_capacity(self.cell_qty() * 3);
         let (r, g, b) = self.get_color();
 
@@ -221,22 +221,26 @@ impl Snake {
                     rgb_board.push(255);
                     rgb_board.push(60);
                     rgb_board.push(60);
+                    rgb_board.push(255);
                 },
                 Item::Nothing => {
                     rgb_board.push(0x60);
                     rgb_board.push(0x60);
                     rgb_board.push(0x60);
+                    rgb_board.push(255);
                 },
                 Item::Snake => {
                     if self.running {
                         rgb_board.push(r);
                         rgb_board.push(g);
                         rgb_board.push(b);
+                        rgb_board.push(255);
                     }
                     else {
                         rgb_board.push(0);
                         rgb_board.push(0);
                         rgb_board.push(0);
+                        rgb_board.push(255);
                     }
                 },
             }

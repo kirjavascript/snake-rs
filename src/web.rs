@@ -15,7 +15,7 @@ mod rand {
         // (js!{
         //     return 0|Math.random() * 0xFFFF;
         // }).into_string().unwrap().parse::<u32>().unwrap()
-        0
+        4
     }
 }
 
@@ -30,13 +30,13 @@ fn main() {
     let mut snake = Snake::new(64, 48);
     snake.step();
 
-    let board: Value = snake.get_rgb().into();
+    let board: Value = snake.get_rgba().into();
 
     js! {
         const board = new ImageData(
             Uint8ClampedArray.from(@{board}),
             64,
-            36, // should be 48
+            48,
         );
         @{ctx}.putImageData(board, 0, 0);
         console.log(board);
