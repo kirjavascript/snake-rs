@@ -116,7 +116,7 @@ fn pixbuf_scale(buf: Pixbuf, width: i32, height: i32, scale: i32) -> Pixbuf {
     );
     buf.scale(&pixbuf_scale,
         0, 0, scaled_width, scaled_height,
-        0., 0., scale as f64, scale as f64, 1,
+        0., 0., scale as f64, scale as f64, 0,
     );
     pixbuf_scale
 }
