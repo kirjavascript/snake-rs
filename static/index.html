@@ -23,9 +23,14 @@
     </script>
     <style>
         canvas {
-            width: 80%;
+            width: 60%;
             image-rendering: optimizeSpeed;
             box-shadow: 2px 2px 5px black;
+        }
+        @media screen and (max-width: 1000px) {
+            canvas {
+                width: 80%;
+            }
         }
         html, body {
             height: 100%;

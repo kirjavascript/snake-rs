@@ -5,7 +5,7 @@ use stdweb::Value;
 use stdweb::web::*;
 use stdweb::web::html_element::CanvasElement;
 use stdweb::unstable::TryInto;
-use stdweb::traits::*;
+// use stdweb::traits::*;
 
 mod snake;
 use snake::Snake;
@@ -28,19 +28,19 @@ fn main() {
     let ctx: CanvasRenderingContext2d = canvas.get_context().unwrap();
 
     let mut snake = Snake::new(64, 48);
-    snake.step();
 
-    let board: Value = snake.get_rgba().into();
-
-    js! {
-        const board = new ImageData(
-            Uint8ClampedArray.from(@{board}),
-            64,
-            48,
-        );
-        @{ctx}.putImageData(board, 0, 0);
-        console.log(board);
-    }
+    window().request_animation_frame( move |_| {
+        snake.step();
+        let board: Value = snake.get_rgba().into();
+        js! {
+            const board = new ImageData(
+                Uint8ClampedArray.from(@{board}),
+                64,
+                48,
+            );
+            @{ctx}.putImageData(board, 0, 0);
+        }
+    });
 
     stdweb::event_loop();
 }
