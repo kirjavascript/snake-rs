@@ -130,7 +130,7 @@ impl Snake {
             }
             else {
                 // unshift tail
-                let _end = self.tail.splice(..1, vec![]);
+                self.tail.remove(0);
             }
         }
     }
