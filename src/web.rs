@@ -5,17 +5,16 @@ use stdweb::Value;
 use stdweb::web::*;
 use stdweb::web::html_element::CanvasElement;
 use stdweb::unstable::TryInto;
-// use stdweb::traits::*;
 
 mod snake;
 use snake::Snake;
 
 mod rand {
+    use stdweb::unstable::TryInto;
     pub fn random() -> u32 {
-        // (js!{
-        //     return 0|Math.random() * 0xFFFF;
-        // }).into_string().unwrap().parse::<u32>().unwrap()
-        4
+        (js!{
+            return Math.floor(Math.random() * 0xFFFFFFFF);
+        }).try_into().unwrap()
     }
 }
 
