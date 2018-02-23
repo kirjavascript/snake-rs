@@ -29,7 +29,17 @@ fn main() {
 
     let mut snake = Snake::new(64, 48);
 
-    window().request_animation_frame( move |_| {
+    let board: Value = snake.get_rgba().into();
+    js! {
+        const board = new ImageData(
+            Uint8ClampedArray.from(@{board}),
+            64,
+            48,
+        );
+        @{&ctx}.putImageData(board, 0, 0);
+    }
+
+    window().request_animation_frame(move |_| {
         snake.step();
         let board: Value = snake.get_rgba().into();
         js! {
@@ -38,7 +48,7 @@ fn main() {
                 64,
                 48,
             );
-            @{ctx}.putImageData(board, 0, 0);
+            @{&ctx}.putImageData(board, 0, 0);
         }
     });
 
