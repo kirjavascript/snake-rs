@@ -22,6 +22,7 @@ fn main() {
     stdweb::initialize();
 
     // TODO: snake.kirjava.xyz
+    // TODO: fix blurry edges in chrome
 
     let canvas: CanvasElement = document().query_selector("canvas").unwrap().unwrap().try_into().unwrap();
     let ctx: CanvasRenderingContext2d = canvas.get_context().unwrap();
