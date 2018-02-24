@@ -29,7 +29,7 @@ fn main() {
 
     let mut snake = Snake::new(64, 48);
 
-    window().request_animation_frame( move |_| {
+    let render = move || {
         snake.step();
         let board: Value = snake.get_rgba().into();
         js! {
@@ -40,6 +40,10 @@ fn main() {
             );
             @{ctx}.putImageData(board, 0, 0);
         }
+    };
+
+    window().request_animation_frame( move |_| {
+        render();
     });
 
     stdweb::event_loop();
