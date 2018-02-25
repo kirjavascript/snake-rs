@@ -13,5 +13,5 @@ cargo run --bin gtk --features=gtk-deps
 run in web
 
 ```shell
-cargo +nightly web start --target-webasm --bin web --features web-deps
+cargo +nightly web start --target wasm32-unknown-unknown --bin web --features web-deps
 ```
