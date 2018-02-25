@@ -40,10 +40,10 @@ fn main() {
     document().add_event_listener(move |e: event::KeyDownEvent| {
         if snake_input_clone.borrow().is_running() {
             let change = match e.key().as_str() {
-                "ArrowUp" => Some(snake::Direction::Up),
-                "ArrowDown" => Some(snake::Direction::Down),
-                "ArrowRight" => Some(snake::Direction::Right),
-                "ArrowLeft" => Some(snake::Direction::Left),
+                "ArrowUp" | "W" | "w" => Some(snake::Direction::Up),
+                "ArrowDown" | "S" | "s" => Some(snake::Direction::Down),
+                "ArrowRight" | "D" | "d" => Some(snake::Direction::Right),
+                "ArrowLeft" | "A" | "a" => Some(snake::Direction::Left),
                 _ => None,
             };
             if change.is_some() {

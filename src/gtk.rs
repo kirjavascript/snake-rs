@@ -64,10 +64,10 @@ fn main() {
     window.connect_key_press_event(move |_, e| {
         if snake_input_clone.borrow().is_running() {
             let change = match e.get_keyval() {
-                65362 => Some(snake::Direction::Up),
-                65364 => Some(snake::Direction::Down),
-                65361 => Some(snake::Direction::Left),
-                65363 => Some(snake::Direction::Right),
+                65362 | 119 | 87 => Some(snake::Direction::Up),
+                65364 | 115 | 83 => Some(snake::Direction::Down),
+                65361 | 97 | 56 => Some(snake::Direction::Left),
+                65363 | 100 | 68 => Some(snake::Direction::Right),
                 _ => None,
             };
             if change.is_some() {

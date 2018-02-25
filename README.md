@@ -1,6 +1,6 @@
-play online
+# snake-rs
 
-[snake.kirjava.xyz](http://snake.kirjava.xyz)
+[play online](http://snake.kirjava.xyz)
 
 build for gtk
 
