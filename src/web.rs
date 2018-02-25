@@ -84,5 +84,5 @@ fn async_render_loop(snake: Rc<RefCell<Snake>>, ctx: CanvasRenderingContext2d, i
         info.set_text_content(&info_text);
 
         async_render_loop(snake, ctx, info);
-    }, 450);
+    }, 45);
 }
