@@ -1,7 +1,7 @@
 [package]
 name = "snake-rs"
 version = "0.1.0"
-authors = ["kirjavascript <snkenjoi@gmail.com>"]
+authors = ["kirjavascript"]
 
 [dependencies]
 gtk = { version = "^0", optional = true }

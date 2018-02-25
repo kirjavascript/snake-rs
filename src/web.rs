@@ -71,7 +71,7 @@ fn async_render_loop(snake: Rc<RefCell<Snake>>, ctx: CanvasRenderingContext2d, i
         else {
             // step n draw
             snake.borrow_mut().step();
-            let board: Value = snake.borrow_mut().get_rgba().into();
+            let board = snake.borrow_mut().get_rgba();
             js! {
                 @{&ctx}.putImageData(new ImageData(
                     // TODO: avoid this clone
