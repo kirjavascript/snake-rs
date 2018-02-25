@@ -1,6 +1,4 @@
-# snake-rs
-
-[play online](http://snake.kirjava.xyz)
+# snake-rs - [play online](http://snake.kirjava.xyz)
 
 build for gtk
 
@@ -13,7 +11,3 @@ build for web
 ```shell
 cargo +nightly web start --target wasm32-unknown-unknown --bin web --features web-deps
 ```
-
-<div align="center">
-    <img src="static/snake-gtk.gif" alt="snake-gtk">
-</div>
