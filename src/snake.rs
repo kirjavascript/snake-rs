@@ -2,6 +2,7 @@ use rand;
 
 pub struct Snake {
     facing: Direction,
+    last_dir: Direction,
     head: Point,
     tail: Vec<Point>,
     fruit: Point,
@@ -23,17 +24,19 @@ enum Item {
     Snake, Fruit, Nothing,
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone)]
 pub enum Direction {
     Up, Down, Left, Right,
 }
 
 impl Direction {
-    fn is_horiz(direction: &Direction) -> bool {
-        direction == &Direction::Right || direction == &Direction::Left
-    }
-    fn is_vert(direction: &Direction) -> bool {
-        direction == &Direction::Up || direction == &Direction::Down
+    fn opposite(direction: &Direction) -> Direction {
+        match direction {
+           &Direction::Up => Direction::Down,
+           &Direction::Down => Direction::Up,
+           &Direction::Left => Direction::Right,
+           &Direction::Right => Direction::Left
+        }
     }
 }
 
@@ -63,12 +66,13 @@ impl Snake {
     pub fn new(width: u32, height: u32) -> Self {
         Snake {
             facing: Direction::Right,
+            last_dir: Direction::Right,
             head: Point::random(width, height),
             tail: Vec::new(),
             fruit: Point::random(width, height),
             width,
             height,
-            score: 0,
+            score: 10,
             increase_amount: 0,
             running: true,
             color_seed: 0,
@@ -85,6 +89,9 @@ impl Snake {
         if self.running {
             // clone head to tail
             self.tail.push(self.head.clone());
+
+            // update last direction
+            self.last_dir = self.facing.clone();
 
             // move head
             match self.facing {
@@ -142,13 +149,9 @@ impl Snake {
     }
 
     pub fn change_direction(&mut self, direction: Direction) {
-        // check vertical axis
-        let horiz = Direction::is_horiz(&direction)
-            && Direction::is_horiz(&self.facing);
-        let vert = Direction::is_vert(&direction)
-            && Direction::is_vert(&self.facing);
-
-        if self.score == 0 || !horiz && !vert {
+        // check if direction is opposite the last direction
+        let opposite = Direction::opposite(&direction) == self.last_dir;
+        if self.score == 0 || !opposite {
             self.facing = direction;
         }
     }

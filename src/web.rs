@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate stdweb;
 
-use stdweb::Value;
 use stdweb::web::*;
 use stdweb::web::html_element::CanvasElement;
 use stdweb::traits::*;
@@ -85,5 +84,5 @@ fn async_render_loop(snake: Rc<RefCell<Snake>>, ctx: CanvasRenderingContext2d, i
         info.set_text_content(&info_text);
 
         async_render_loop(snake, ctx, info);
-    }, 45);
+    }, 450);
 }
