@@ -6,9 +6,7 @@
 
 play online
 
-```
-[snake.kirjava.xyz](http://snake.kirjava.xyz)
-```
+    [snake.kirjava.xyz](http://snake.kirjava.xyz)
 
 build for gtk
 
