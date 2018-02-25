@@ -26,8 +26,7 @@ mod rand {
 fn main() {
     stdweb::initialize();
 
-    // TODO: snake.kirjava.xyz
-    // TODO: https://rustbyexample.com/attribute/cfg.html
+    // TODO: snake.kirjava.xyz / play online
 
     // load snake, canvas
     let canvas: CanvasElement = document().query_selector("canvas").unwrap().unwrap().try_into().unwrap();
@@ -61,9 +60,12 @@ fn main() {
 }
 
 fn async_render_loop(snake: Rc<RefCell<Snake>>, ctx: CanvasRenderingContext2d) {
+    // TODO: set_timeout can cause lag due to how tasks are queued in the event loop
+    // replace with requestAnimationFrame + performance.now()
     set_timeout(move || {
-        snake.borrow_mut().step();
 
+        // step n draw
+        snake.borrow_mut().step();
         let board: Value = snake.borrow_mut().get_rgba().into();
         js! {
             @{&ctx}.putImageData(new ImageData(
