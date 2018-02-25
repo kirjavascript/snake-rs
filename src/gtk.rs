@@ -1,7 +1,3 @@
-// gtk / canvas
-// lerp
-// score in title
-
 extern crate gtk;
 extern crate gdk;
 extern crate gdk_pixbuf;

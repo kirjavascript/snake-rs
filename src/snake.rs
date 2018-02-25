@@ -63,7 +63,7 @@ impl Snake {
     pub fn new(width: u32, height: u32) -> Self {
         Snake {
             facing: Direction::Right,
-            head: Point { x: 0, y: 0 },
+            head: Point::random(width, height),
             tail: Vec::new(),
             fruit: Point::random(width, height),
             width,

@@ -4,7 +4,6 @@ extern crate stdweb;
 use stdweb::Value;
 use stdweb::web::*;
 use stdweb::web::html_element::CanvasElement;
-use stdweb::web::event::KeyDownEvent;
 use stdweb::traits::*;
 use stdweb::unstable::TryInto;
 
@@ -23,6 +22,7 @@ mod rand {
     }
 }
 
+
 fn main() {
     stdweb::initialize();
 
@@ -31,14 +31,15 @@ fn main() {
     // load snake, canvas
     let canvas: CanvasElement = document().query_selector("canvas").unwrap().unwrap().try_into().unwrap();
     let ctx: CanvasRenderingContext2d = canvas.get_context().unwrap();
+    let info: Element = document().query_selector("span").unwrap().unwrap();
     let snake = Rc::new(RefCell::new(Snake::new(64, 48)));
 
     // drawing
-    async_render_loop(snake.clone(), ctx);
+    async_render_loop(snake.clone(), ctx, info);
 
     // input
     let snake_input_clone = snake.clone();
-    document().add_event_listener(move |e: KeyDownEvent| {
+    document().add_event_listener(move |e: event::KeyDownEvent| {
         if snake_input_clone.borrow().is_running() {
             let change = match e.key().as_str() {
                 "ArrowUp" => Some(snake::Direction::Up),
@@ -59,23 +60,32 @@ fn main() {
     stdweb::event_loop();
 }
 
-fn async_render_loop(snake: Rc<RefCell<Snake>>, ctx: CanvasRenderingContext2d) {
+fn async_render_loop(snake: Rc<RefCell<Snake>>, ctx: CanvasRenderingContext2d, info: Element) {
     // TODO: set_timeout can cause lag due to how tasks are queued in the event loop
-    // replace with requestAnimationFrame + performance.now()
+    // replace with requestAnimationFrame + performance.now() to fix
     set_timeout(move || {
 
-        // step n draw
-        snake.borrow_mut().step();
-        let board: Value = snake.borrow_mut().get_rgba().into();
-        js! {
-            @{&ctx}.putImageData(new ImageData(
-                // TODO: avoid this clone
-                Uint8ClampedArray.from(@{board}),
-                64,
-                48,
-            ), 0, 0);
+        let mut info_text = format!("score: {}", snake.borrow().get_score());
+
+        if !snake.borrow().is_running() {
+            info_text.push_str(" - press SPACE to restart");
+        }
+        else {
+            // step n draw
+            snake.borrow_mut().step();
+            let board: Value = snake.borrow_mut().get_rgba().into();
+            js! {
+                @{&ctx}.putImageData(new ImageData(
+                    // TODO: avoid this clone
+                    Uint8ClampedArray.from(@{board}),
+                    64,
+                    48,
+                ), 0, 0);
+            }
         }
 
-        async_render_loop(snake, ctx);
+        info.set_text_content(&info_text);
+
+        async_render_loop(snake, ctx, info);
     }, 45);
 }

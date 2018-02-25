@@ -7,13 +7,16 @@
     <title>snake-rs</title>
     <style>
         canvas {
-            width: 60%;
+            width: 100%;
             image-rendering: optimizeSpeed; /* firefox */
             image-rendering: pixelated; /* chrome */
             box-shadow: 2px 2px 5px black;
         }
+        main {
+            width: 60%;
+        }
         @media screen and (max-width: 1000px) {
-            canvas {
+            main {
                 width: 80%;
             }
         }
@@ -21,16 +24,34 @@
             height: 100%;
             margin: 0;
             background-color: #111;
+            color: #777;
         }
         body {
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: Hack, monospace;
+        }
+        h1, span {
+            font-size: 15px;
+            margin: 6px 0;
+        }
+        section {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
         }
     </style>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3/build/web/hack-subset.css">
 </head>
 <body>
-    <canvas width="64" height="48"></canvas>
+    <main>
+        <canvas width="64" height="48"></canvas>
+        <section>
+            <h1>snake-rs</h1>
+            <span></span>
+        </section>
+    </main>
     <script src="web.js"></script>
 </body>
 </html>
