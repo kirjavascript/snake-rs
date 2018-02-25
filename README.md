@@ -4,6 +4,12 @@
     <img src="static/snake-gtk.gif" alt="snake-gtk">
 </div>
 
+play online
+
+```
+[snake.kirjava.xyz](http://snake.kirjava.xyz)
+```
+
 build for gtk
 
 ```shell
@@ -15,3 +21,5 @@ build for web
 ```shell
 cargo +nightly web start --target wasm32-unknown-unknown --bin web --features web-deps
 ```
+
+WASD
