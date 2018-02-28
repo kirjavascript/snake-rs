@@ -72,7 +72,7 @@ impl Snake {
             fruit: Point::random(width, height),
             width,
             height,
-            score: 10,
+            score: 0,
             increase_amount: 0,
             running: true,
             color_seed: 0,
