@@ -221,9 +221,9 @@ impl Snake {
         for cell in self.get_board() {
             match cell {
                 Item::Fruit => {
-                    rgb_board.push(255);
-                    rgb_board.push(60);
-                    rgb_board.push(60);
+                    rgb_board.push(r);
+                    rgb_board.push(g);
+                    rgb_board.push(b);
                     rgb_board.push(255);
                 },
                 Item::Nothing => {
