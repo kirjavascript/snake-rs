@@ -151,7 +151,7 @@ impl Snake {
     pub fn change_direction(&mut self, direction: Direction) {
         // check if direction is opposite the last direction
         let opposite = Direction::opposite(&direction) == self.last_dir;
-        if self.score == 0 || !opposite {
+        if !opposite {
             self.facing = direction;
         }
     }
