@@ -12,6 +12,7 @@ pub struct Snake {
     running: bool,
     increase_amount: u8,
     color_seed: u16,
+    collide_mode: bool,
 }
 
 #[derive(PartialEq)]
@@ -63,7 +64,7 @@ impl Point {
 }
 
 impl Snake {
-    pub fn new(width: u32, height: u32) -> Self {
+    pub fn new(width: u32, height: u32, collide_mode: bool) -> Self {
         Snake {
             facing: Direction::Right,
             last_dir: Direction::Right,
@@ -76,6 +77,7 @@ impl Snake {
             increase_amount: 0,
             running: true,
             color_seed: 0,
+            collide_mode: collide_mode,
         }
     }
 
@@ -103,16 +105,50 @@ impl Snake {
 
             // wrap
             if self.head.x >= self.width as i32 {
-                self.head.x = 0;
+                match self.collide_mode {
+                    true => {
+                        self.running = false;
+                    },
+                    false => {
+                        self.head.x = 0;
+                    },
+                }
             }
             else if self.head.x < 0 {
-                self.head.x = self.width as i32 -1;
+                match self.collide_mode {
+                    true => {
+                        self.running = false;
+                    },
+                    false => {
+                        self.head.x = self.width as i32 -1;
+                    },
+                }
             }
             else if self.head.y >= self.height as i32 {
-                self.head.y = 0;
+                match self.collide_mode {
+                    true => {
+                        self.running = false;
+                    },
+                    false => {
+                        self.head.y = 0;
+                    },
+                }
             }
             else if self.head.y < 0 {
-                self.head.y = self.height as i32 -1;
+                match self.collide_mode {
+                    true => {
+                        self.running = false;
+                    },
+                    false => {
+                        self.head.y = self.height as i32 -1;
+                    },
+                }
+            }
+
+            if ! self.running {
+                self.facing = Direction::Right;
+                self.last_dir = Direction::Right;
+                self.head = Point::random(self.width, self.height);
             }
 
             // check collision with tail
