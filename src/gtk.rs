@@ -10,7 +10,6 @@ use gdk_pixbuf::Pixbuf;
 
 use std::cell::RefCell;
 use std::rc::Rc;
-use std::env::args_os;
 
 mod snake;
 use snake::Snake;
@@ -22,7 +21,7 @@ fn main() {
         panic!("Failed to initialize GTK.");
     }
 
-    let collide_mode = args_os().nth(1).map(|s| s.to_string_lossy().into_owned()) == Some(String::from("--collide"));
+    let collide_mode = &std::env::args().collect::<Vec<_>>()[1..].join("") == "--collide";
 
     // init stuff
     let window = gtk::Window::new(gtk::WindowType::Toplevel);

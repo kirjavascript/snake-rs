@@ -87,6 +87,16 @@ impl Snake {
         self.tail = Vec::new();
     }
 
+    pub fn collided(&mut self) -> bool {
+        if self.collide_mode {
+            self.running = false;
+            self.head = Point::random(self.width, self.height);
+            true
+        } else {
+            false
+        }
+    }
+
     pub fn step(&mut self) {
         if self.running {
             // clone head to tail
@@ -105,50 +115,24 @@ impl Snake {
 
             // wrap
             if self.head.x >= self.width as i32 {
-                match self.collide_mode {
-                    true => {
-                        self.running = false;
-                    },
-                    false => {
-                        self.head.x = 0;
-                    },
+                if !self.collided() {
+                    self.head.x = 0;
                 }
             }
             else if self.head.x < 0 {
-                match self.collide_mode {
-                    true => {
-                        self.running = false;
-                    },
-                    false => {
-                        self.head.x = self.width as i32 -1;
-                    },
+                if !self.collided() {
+                    self.head.x = self.width as i32 -1;
                 }
             }
             else if self.head.y >= self.height as i32 {
-                match self.collide_mode {
-                    true => {
-                        self.running = false;
-                    },
-                    false => {
-                        self.head.y = 0;
-                    },
+                if !self.collided() {
+                    self.head.y = 0;
                 }
             }
             else if self.head.y < 0 {
-                match self.collide_mode {
-                    true => {
-                        self.running = false;
-                    },
-                    false => {
-                        self.head.y = self.height as i32 -1;
-                    },
+                if !self.collided() {
+                    self.head.y = self.height as i32 -1;
                 }
-            }
-
-            if ! self.running {
-                self.facing = Direction::Right;
-                self.last_dir = Direction::Right;
-                self.head = Point::random(self.width, self.height);
             }
 
             // check collision with tail
