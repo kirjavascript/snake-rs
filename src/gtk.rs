@@ -21,6 +21,8 @@ fn main() {
         panic!("Failed to initialize GTK.");
     }
 
+    let collide_mode = &std::env::args().collect::<Vec<_>>()[1..].join("") == "--collide";
+
     // init stuff
     let window = gtk::Window::new(gtk::WindowType::Toplevel);
 
@@ -39,7 +41,7 @@ fn main() {
     window.show_all();
 
     // load snake
-    let snake = Rc::new(RefCell::new(Snake::new(64, 48)));
+    let snake = Rc::new(RefCell::new(Snake::new(64, 48, collide_mode)));
 
     // drawing callback
     let snake_draw_clone = snake.clone();

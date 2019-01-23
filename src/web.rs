@@ -29,7 +29,8 @@ fn main() {
     let canvas: CanvasElement = document().query_selector("canvas").unwrap().unwrap().try_into().unwrap();
     let ctx: CanvasRenderingContext2d = canvas.get_context().unwrap();
     let info: Element = document().query_selector("span").unwrap().unwrap();
-    let snake = Rc::new(RefCell::new(Snake::new(64, 48)));
+    let collide_mode = js! { return window.location.hash == "#collide" }.try_into().unwrap();
+    let snake = Rc::new(RefCell::new(Snake::new(64, 48, collide_mode)));
 
     // drawing
     async_render_loop(snake.clone(), ctx, info);
