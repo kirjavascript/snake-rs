@@ -1,0 +1,83 @@
+{
+  "family": "unix",
+  "env": "newlib",
+  "target-env": "newlib",
+  "target-family": "unix",
+  "target-c-int-width": "32",
+  "target-endian": "little",
+  "target-pointer-width": "64",
+  "os": "horizon-nx",
+  "arch": "aarch64",
+  "panic-strategy": "unwind",
+  "abi-blacklist": [
+      "stdcall",
+      "fastcall",
+      "vectorcall",
+      "thiscall",
+      "win64",
+      "sysv64"
+  ],
+  "dynamic-linking" : false,
+  "features": "+a57,+strict-align,+crc,+crypto",
+  "data-layout": "e-m:e-i8:8:32-i16:16:32-i64:64-i128:128-n32:64-S128",
+  "executables": true,
+  "position-independent-executables" : true,
+  "linker-flavor": "gcc",
+  "llvm-target": "aarch64-unknown-none",
+  "has-elf-tls" : false,
+  "linker-is-gnu" : true,
+  "disable-redzone" : true,
+  "linker" : "/opt/devkitpro/devkitA64/bin/aarch64-none-elf-gcc",
+  "pre-link-args": {
+    "gcc": [
+      "-specs=/opt/devkitpro/libnx/switch.specs",
+      "-march=armv8-a",
+      "-mtune=cortex-a57",
+      "-mtp=soft",
+      "-nodefaultlibs",
+      "-nostdlib",
+      "-nostartfiles",
+      "-L/opt/devkitpro/portlibs/switch/lib",
+      "-L/opt/devkitpro/libnx/lib",
+      "-L/opt/devkitpro/devkitA64/lib/gcc/aarch64-none-elf/8.3.0/pic",
+      "-L/opt/devkitpro/devkitA64/aarch64-none-elf/lib/pic"
+    ]
+  },
+  "late-link-args": {
+    "gcc": [
+      "-Wl,--start-group",
+      "-lSDL2",
+      "-lEGL",
+      "-lGLESv2",
+      "-lglapi",
+      "-ldrm_nouveau",
+      "-lstdc++",
+      "-lgcc",
+      "-lc",
+      "-lnx",
+      "-lsysbase",
+      "-lm",
+      "-l:crtbegin.o",
+      "-l:crtend.o",
+      "-l:crti.o",
+      "-l:crtn.o",
+      "-Wl,--end-group",
+      "-fPIE",
+      "-pie"
+    ]
+  },
+  "post-link-args": {
+    "gcc": [
+      "--verbose",
+      "-Wl,-z,text",
+      "-Wl,-z,muldefs"
+    ]
+  },
+  "relocation-model" : "pic",
+  "max-atomic-width": 128,
+  "exe-suffix": ".elf",
+  "staticlib-suffix" : ".a",
+  "trap-unreachable" : true,
+  "emit-debug-gdb-scripts" : true,
+  "requires-uwtable" : true
+}

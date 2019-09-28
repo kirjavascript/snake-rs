@@ -1,0 +1,14 @@
+[package]
+name = "snake-rs"
+edition = "2018"
+version = "0.0.1"
+authors = ["kirjavascript"]
+
+[dependencies.nx-rs]
+git = "https://github.com/rusty-horizon/nx-rs"
+features = []
+
+[dependencies.sdl2-sys]
+git = "https://github.com/rusty-horizon/switch-sdl2-sys"
+branch = "master"
+features = []
