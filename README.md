@@ -15,9 +15,11 @@ cargo +nightly web start --target wasm32-unknown-unknown --bin web --features we
 build for nintendo switch
 
 install [devKitPro](https://devkitpro.org/wiki/Getting_Started#Setup)
-follow the rusty-horizon [setup guide](https://github.com/rusty-horizon/setup-guide)
+and follow the rusty-horizon [setup guide](https://github.com/rusty-horizon/setup-guide)
 
 ```
 pacman -S switch-sdl2 switch-sdl2_ttf
 cd switch && sh build.sh
 ```
+
+or download the [nro](switch/snake-rs.nro)

@@ -9,7 +9,7 @@ mod rand {
 }
 
 fn s(s: &str) -> *const u8 {
-    s.as_bytes().as_ptr()
+    format!("{}\0", s).as_bytes().as_ptr()
 }
 
 fn main() {
@@ -18,6 +18,7 @@ fn main() {
 
         SDL_Init(SDL_INIT_EVERYTHING as u32);
         TTF_Init();
+        nx_sys::romfsMount(s("romfs"));
         let window = SDL_CreateWindow(s("snake-rs"), 0, 0, 1280, 720, 0);
         let renderer = SDL_CreateRenderer(window, 0, 2 | 4);
         SDL_SetRenderDrawBlendMode(renderer, 1);

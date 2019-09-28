@@ -8,6 +8,10 @@ authors = ["kirjavascript"]
 git = "https://github.com/rusty-horizon/nx-rs"
 features = []
 
+[dependencies.nx-sys]
+git = "https://github.com/rusty-horizon/nx-rs"
+features = []
+
 [dependencies.sdl2-sys]
 git = "https://github.com/rusty-horizon/switch-sdl2-sys"
 branch = "master"
