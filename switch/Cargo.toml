@@ -11,4 +11,4 @@ features = []
 [dependencies.sdl2-sys]
 git = "https://github.com/rusty-horizon/switch-sdl2-sys"
 branch = "master"
-features = []
+features = ["ttf"]

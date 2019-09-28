@@ -16,7 +16,7 @@ nacp_version="1.0.0"
 icon=icon.jpg
 
 # * RomFs directory (optional, NRO only) -> directory name to be embedded within the NRO as a RomFs filesystem.
-# romfs_dir=romfs
+romfs_dir=romfs
 
 # ---
 # ---

@@ -47,6 +47,11 @@
     "gcc": [
       "-Wl,--start-group",
       "-lSDL2",
+      "-lSDL2_ttf",
+      "-lfreetype",
+      "-lbz2",
+      "-lpng",
+      "-lz",
       "-lEGL",
       "-lGLESv2",
       "-lglapi",
