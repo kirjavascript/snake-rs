@@ -9,7 +9,7 @@ mod rand {
 }
 
 fn s(s: &str) -> *const u8 {
-    "test".as_bytes() as *const _ as *const u8
+    s.as_bytes().as_ptr()
 }
 
 fn main() {
