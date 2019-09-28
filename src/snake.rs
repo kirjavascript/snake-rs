@@ -1,4 +1,4 @@
-use rand;
+use super::rand;
 
 pub struct Snake {
     facing: Direction,
@@ -82,12 +82,14 @@ impl Snake {
     }
 
     pub fn restart(&mut self) {
-        self.score = 0;
-        self.running = true;
-        self.tail = Vec::new();
+        if !self.running {
+            self.score = 0;
+            self.running = true;
+            self.tail = Vec::new();
+        }
     }
 
-    pub fn collided(&mut self) -> bool {
+    fn collided(&mut self) -> bool {
         if self.collide_mode {
             self.running = false;
             self.head = Point::random(self.width, self.height);

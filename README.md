@@ -11,3 +11,13 @@ build for web
 ```shell
 cargo +nightly web start --target wasm32-unknown-unknown --bin web --features web-deps
 ```
+
+build for nintendo switch
+
+install [devKitPro](https://devkitpro.org/wiki/Getting_Started#Setup)
+follow the rusty-horizon [setup guide](https://github.com/rusty-horizon/setup-guide)
+
+```
+pacman -S switch-sdl2 switch-sdl2_ttf
+cd switch && sh build.sh
+```
